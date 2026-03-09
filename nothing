@@ -1,0 +1,39 @@
+import requests
+
+def get_location():
+    print("📍 Fetching your location...\n")
+
+    # Get location from IP
+    res = requests.get("https://ipapi.co/json/").json()
+
+    data = {
+        "IP Address":    res.get("ip", "N/A"),
+        "City":          res.get("city", "N/A"),
+        "Region":        res.get("region", "N/A"),
+        "Country":       res.get("country_name", "N/A"),
+        "Postal Code":   res.get("postal", "N/A"),
+        "Latitude":      res.get("latitude", "N/A"),
+        "Longitude":     res.get("longitude", "N/A"),
+        "Timezone":      res.get("timezone", "N/A"),
+        "ISP":           res.get("org", "N/A"),
+    }
+
+    # Print as a simple table
+    col_width = max(len(k) for k in data) + 2
+    separator = "+" + "-" * (col_width + 1) + "+" + "-" * 30 + "+"
+
+    print(separator)
+    print(f"| {'Field':<{col_width}}| {'Value':<28} |")
+    print(separator)
+    for key, val in data.items():
+        print(f"| {key:<{col_width}}| {str(val):<28} |")
+    print(separator)
+
+    # Google Maps link
+    lat, lon = res.get("latitude"), res.get("longitude")
+    if lat and lon:
+        maps_url = f"https://www.google.com/maps?q={lat},{lon}"
+        print(f"\n🗺️  Google Maps: {maps_url}")
+
+if __name__ == "__main__":
+    get_location()
